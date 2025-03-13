@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh './output'  // This file does not exist!
+                sh './unknown_output'  // This file does not exist!
             }
         }
 
