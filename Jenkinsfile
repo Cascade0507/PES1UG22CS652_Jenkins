@@ -1,37 +1,35 @@
-pipeline
-{
-    agent{
-        docker{
-            image 'node:14'
-        }
-    }
+pipeline {
+    agent any
     stages {
-        stage('Clone Repository'){
+        stage('Clone repository') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/Cascade0507/PES1UG22CS652_Jenkins.git'
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    useRemoteConfigs: [[url: 'https://github.com/Sudhanva420/PES1UG22CS621_Jenkins.git']]
+                ])
             }
         }
-        stage('Build Application'){
+        stage('Build') {
             steps {
-                sh 'g++ -o new new.cpp'
+                build 'PES1UG22CS621-1'
+                sh 'g++ main/new.cpp -o output'
             }
         }
-        stage('Test Application'){
-            steps{
-                sh './new'
+        stage('Test') {
+            steps {
+                sh './output'  // This file does not exist!
             }
         }
-        stage('Deploy Application'){
-            steps{
-                echo 'Deploying Application'
+
+        stage('Deploy') {
+            steps {
+                echo 'deploy'
             }
         }
-        
     }
-    post{
-        failure{
-            echo 'Build Failed'
+    post {
+        failure {
+            error 'Pipeline failed'
         }
     }
 }
